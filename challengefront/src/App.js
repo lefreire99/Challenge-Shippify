@@ -1,6 +1,6 @@
 import { Alert } from 'bootstrap'
 import React from 'react'
-import { Modal, Button, Dropdown, Toast } from 'react-bootstrap'
+import { Modal, Button, Dropdown, Toast, ToastContainer } from 'react-bootstrap'
 import ModalDialog from './components/modal'
 
 
@@ -78,6 +78,11 @@ function App() {
       .catch(error => console.error("Error",error))
       .then(data=>{
         console.log(data)
+        if(data==="ok"){
+          setShowAc(false)
+          setMessage("Vehículo actualizado.")
+          setShowTo(true)
+        }
       })
     }
 
@@ -94,7 +99,12 @@ function App() {
     .catch(error => console.error("Error",error))
     .then(data=>{
       console.log(data)
-      tabla.removeChild(fila)
+      if(data==="ok"){
+        tabla.removeChild(fila)
+        setShowEl(false)
+        setMessage("Vehículo eliminado.")
+        setShowTo(true)
+      }
     })
   }
 
@@ -109,7 +119,7 @@ function App() {
     var obj ={driver_id:driver,plate:matricula,model:modelo,type:tipo,capacity:capacidad}
     console.log(JSON.stringify(obj))
     if(matricula==='' || modelo==='' || tipo==='' || capacidad==='' || driver===''){
-      setMessage("Llene todos los campos.")
+      setMessage("Llene todos los campos|Falta conductor.")
       setShowTo(true)
       return
     }else{
@@ -124,6 +134,11 @@ function App() {
       .catch(error => console.error("Error",error))
       .then(data=>{
         console.log(data)
+        if(data==="ok"){
+          setShow(false)
+          setMessage("Vehículo creado.")
+          setShowTo(true)
+        }
       })
     }
   }
@@ -294,13 +309,16 @@ function App() {
           </Modal.Footer>
         </Modal>
       </div>
-
-      <Toast onClose={() => setShowTo(false)} show={showTo} delay={3000} autohide>
-        <Toast.Header>
-          <strong className="me-auto">Notificación</strong>
-        </Toast.Header>
-        <Toast.Body id='toast'>{message}</Toast.Body>
-      </Toast>
+      
+      <ToastContainer position="top-end" className="p-3">
+        <Toast onClose={() => setShowTo(false)} show={showTo} delay={20000} autohide>
+          <Toast.Header>
+            <strong className="me-auto">Notificación</strong>
+            <small className="text-muted">Ahora</small>
+          </Toast.Header>
+          <Toast.Body id='toast'>{message}</Toast.Body>
+        </Toast>
+      </ToastContainer>
 
     </div>
   );
