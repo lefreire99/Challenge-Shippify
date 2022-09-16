@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const sequelize = require('../models/index.js').sequelize;
 var initModels = require("../models/init-models");
+const vehicle = require('../models/vehicle.js');
 var models = initModels(sequelize); 
 
 //Obtener lista de vehiculos
@@ -17,17 +18,23 @@ router.get('/', function(req, res, next) {
 
 //Obtener lista de vehiculos por conductor
 router.get('/driver/:id',function(req,res,next){
+    console.log(req.body)
+    var offset = (req.body.page-1)*req.body.limits
+    console.log(offset) 
     models.vehicle.findAll({ 
         attributes: { exclude: ["creation_date"] },
         where: {
             driver_id:req.params.id
-        }
+        },
+        order:["id"],
+        offset:offset,
+        limit:req.body.limits
       })
       .then(vehicle => {
          res.send(vehicle)
       })
       .catch(error => res.status(400).send(error))
-})  
+})
 
 //Creacion vehiculos
 router.post('/crevehicle',function(req,res,next){
