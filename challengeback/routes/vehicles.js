@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
 })
 
 //Obtener lista de vehiculos por conductor
-router.get('/driver/:id',function(req,res,next){
+router.post('/driver/:id',function(req,res,next){
     console.log(req.body)
     var offset = (req.body.page-1)*req.body.limits
     console.log(offset) 

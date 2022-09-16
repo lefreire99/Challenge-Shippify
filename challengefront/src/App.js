@@ -23,10 +23,19 @@ function App() {
 
   function vehiclesTable(){
     var driver = document.getElementById("selectDriver").value
+    let pagina = document.getElementById("pagina").value
+    let limite = document.getElementById("limite").value
     var url = "http://localhost:3001/vehicles/driver/"+driver
-    console.log(url)
+    var page = (pagina=='' || isNaN(pagina))?1:parseInt(pagina)
+    var limit = limite=='' || isNaN(limite)?2:parseInt(limite)
+    var obj ={limits:limit,page:page}
+    console.log(JSON.stringify(obj))
     fetch(url,{
-      method:"GET"
+      method:"POST",
+      body: JSON.stringify(obj),
+      headers:{
+        'Content-Type': 'application/json'
+      }
     }).then(res => res.json())
     .catch(error => console.error("Error",error))
     .then(data=>{
@@ -158,8 +167,8 @@ function App() {
               </div>
           </div>
         </div>
-        <div className="container-fluid mb-3">
-          <div className="d-flex">
+        <div className="container-fluid">
+          <div className="d-flex mb-3">
               <select className="form-select form-select-sm me-2" id="selectDriver">
                 <option value="">Conductor</option>
                 {
@@ -172,6 +181,16 @@ function App() {
               </select>    
               <button className="btn btn-secondary me-2" type="button" id="btnSearch" onClick={vehiclesTable}><i className="bi bi-search"></i> Buscar</button>
               <Button className='btn btn-secondary' id="agregar" onClick={handleShow}>Agregar</Button>
+          </div>
+          <div className='row'>
+            <div className='col-4'>
+              <div className='input-group mb-3'>
+                <span className="input-group-text" id="paginaHelpAc">Página</span>
+                <input type="text" className="form-control general" id="pagina" aria-label="pagina" aria-describedby="paginaHelpAc" required/>
+                <span className="input-group-text" id="limiteHelpAc">Limite</span>
+                <input type="text" className="form-control general" id="limite" aria-label="limite" aria-describedby="limiteHelpAc" required/>
+              </div>
+            </div>
           </div>
         </div>
         <div className="mb-3">
